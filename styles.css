@@ -1,0 +1,25 @@
+table, tr, td{
+    border: 1px solid;
+    height: 65px;
+    min-width: 63px;
+    table-layout: fixed;
+    text-align: center;
+    margin: 0 auto;
+}
+
+p{
+    font-size: larger;
+}
+
+html {
+    display: table;
+    margin: auto;
+    height: 100%;
+}
+
+body {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    height: 100%;
+}
