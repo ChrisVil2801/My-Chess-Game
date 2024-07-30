@@ -71,7 +71,7 @@ function Move(id){
 
                 if (check == true){
 
-                    if (pieceColour == checkKingId.split(" ")[2]){
+                    if (pieceColour == checkKingId.split(" ")[2] || (pieceColour != checkKingId.split(" ")[2] && pieceSpace.split(" ")[1] == "King")){
 
                         moveSpaces[spaceIndex] = newPieceSpaceId;
                         pieceSpace = newMoveSpaceId;
@@ -157,7 +157,7 @@ function Move(id){
     let locL = loc.split("")[0];
     let locN = loc.split("")[1];
 
-    if ((piece != "Empty" && currentTurn == undefined /*&& check != true*/) || (piece != "Empty" && colour == currentTurn /*&& check != true*/) /*|| (piece == "King" && colour == currentTurn && check == true)*/){
+    if ((piece != "Empty" && currentTurn == undefined) || (piece != "Empty" && colour == currentTurn)){
         if (piece == "Pawn"){
             Pawn(id, locL, locN, colour);
         }
@@ -187,83 +187,52 @@ function Pawn(id, locL, locN, colour){
 
     let opColour;
     let moveDirection;
+    let changeLoc;
 
     if (colour == "Black"){
         opColour = "White";
         moveDirection = -1;
-
-        if (locN == 1){
-
-            let changeList = ["Queen", "Bishop", "Knight", "Rook"];
-
-            for (changeIndex in changeList){
-
-                let changeBool = confirm("Change Pawn into "+ changeList[changeIndex] + "?");
-
-                if (changeBool == true){
-
-                    let changePawn = document.getElementById(id);
-
-                    changePawn.innerHTML = "<img src= "+ changeList[changeIndex] +""+ colour +".png>"
-
-                    changePawn.id = ""+ id.split(" ")[0] + " " + changeList[changeIndex] + " " + id.split(" ")[2] + "";
-
-                    return;
-
-                }
-            }
-
-            alert("Fine. I'll Choose For You Then.");
-
-            let queen = "Queen";
-
-            let changePawn = document.getElementById(id);
-
-            changePawn.innerHTML = "<img src= "+ queen +""+ colour +".png>"
-
-            changePawn.id = ""+ id.split(" ")[0] + " " + queen + " " + id.split(" ")[2] + "";
-
-            return;
-        }
+        changeLoc = 1;
     }
 
     if (colour == "White"){
         opColour = "Black";
         moveDirection = 1;
+        changeLoc = 8;
+    }
 
-        if (locN == 8){
+    if (locN == changeLoc){
 
-            let changeList = ["Queen", "Bishop", "Knight", "Rook"];
+        let changeList = ["Queen", "Bishop", "Knight", "Rook"];
 
-            for (changeIndex in changeList){
+        for (changeIndex in changeList){
 
-                let changeBool = confirm("Change Pawn into "+ changeList[changeIndex] + "?");
+            let changeBool = confirm("Change Pawn into "+ changeList[changeIndex] + "?");
 
-                if (changeBool == true){
+            if (changeBool == true){
 
-                    let changePawn = document.getElementById(id);
+                let changePawn = document.getElementById(id);
 
-                    changePawn.innerHTML = "<img src= "+ changeList[changeIndex] +""+ colour +".png>"
+                changePawn.innerHTML = "<img src= "+ changeList[changeIndex] +""+ colour +".png>"
 
-                    changePawn.id = ""+ id.split(" ")[0] + " " + changeList[changeIndex] + " " + id.split(" ")[2] + "";
+                changePawn.id = ""+ id.split(" ")[0] + " " + changeList[changeIndex] + " " + id.split(" ")[2] + "";
 
-                    return;
+                return;
 
-                }
             }
-
-            alert("Fine. I'll Choose For You Then.");
-
-            let queen = "Queen";
-
-            let changePawn = document.getElementById(id);
-
-            changePawn.innerHTML = "<img src= "+ queen +""+ colour +".png>"
-
-            changePawn.id = ""+ id.split(" ")[0] + " " + queen + " " + id.split(" ")[2] + "";
-
-            return;
         }
+
+        alert("Fine. I'll Choose For You Then.");
+
+        let queen = "Queen";
+
+        let changePawn = document.getElementById(id);
+
+        changePawn.innerHTML = "<img src= "+ queen +""+ colour +".png>"
+
+        changePawn.id = ""+ id.split(" ")[0] + " " + queen + " " + id.split(" ")[2] + "";
+
+        return;
     }
 
     let moveAmount = 1;
@@ -943,49 +912,46 @@ function KingCheckCheck(moveList, changeColour){
             }
         }
 
-        if (kingList[kingIndex].split(" ")[1] != "King"){
+        let kingMoves = [1, -1, 1, -1, 1, -1, 1, -1];
 
-            let kingMoves = [1, -1, 1, -1, 1, -1, 1, -1];
+        for (kingMovesIndex in kingMoves){
 
-            for (kingMovesIndex in kingMoves){
+            let moveAmount = 1;
+            let rowMove = kingMoves[kingMovesIndex];
+            let columnMove = 0;
 
-                let moveAmount = 1;
-                let rowMove = kingMoves[kingMovesIndex];
-                let columnMove = 0;
+            if (kingMovesIndex == 2 || kingMovesIndex == 3){
+                rowMove = 0;
+                columnMove = kingMoves[kingMovesIndex];
+            }
+            if (kingMovesIndex == 4 || kingMovesIndex == 5){
+                rowMove = 1;
+                columnMove = kingMoves[kingMovesIndex];
+            }
+            if (kingMovesIndex == 6 || kingMovesIndex == 7){
+                rowMove = -1;
+                columnMove = kingMoves[kingMovesIndex];
+            }
 
-                if (kingMovesIndex == 2 || kingMovesIndex == 3){
-                    rowMove = 0;
-                    columnMove = kingMoves[kingMovesIndex];
-                }
-                if (kingMovesIndex == 4 || kingMovesIndex == 5){
-                    rowMove = 1;
-                    columnMove = kingMoves[kingMovesIndex];
-                }
-                if (kingMovesIndex == 6 || kingMovesIndex == 7){
-                    rowMove = -1;
-                    columnMove = kingMoves[kingMovesIndex];
-                }
+            let checkLocN = rows[(rows.indexOf(kingLocN) + (moveAmount * rowMove))];
+            let checkLocL = columns[(columns.indexOf(kingLocL) + (moveAmount * columnMove))];
 
-                let checkLocN = rows[(rows.indexOf(kingLocN) + (moveAmount * rowMove))];
-                let checkLocL = columns[(columns.indexOf(kingLocL) + (moveAmount * columnMove))];
+            if (checkLocL != undefined && checkLocN != undefined){
 
-                if (checkLocL != undefined && checkLocN != undefined){
+                let checkLoc = checkLocL.concat(checkLocN);
+                let checkId = document.querySelector('[id^="'+ checkLoc +'"]').id;
 
-                    let checkLoc = checkLocL.concat(checkLocN);
-                    let checkId = document.querySelector('[id^="'+ checkLoc +'"]').id;
+                if (checkId.split(" ")[1] == "King" && checkId.split(" ")[2] == opColour && checkId != checkKingId){
 
-                    if (checkId.split(" ")[1] == "King" && checkId.split(" ")[2] == opColour && checkId != checkKingId){
-
-                        if (check == true){
-                            return;
-                        }
-
-                        kingCheckSpaces = checkSpaces;
-                        check = true;
-                        checkKingId = kingList[kingIndex];
+                    if (check == true){
                         return;
-
                     }
+
+                    kingCheckSpaces = checkSpaces;
+                    check = true;
+                    checkKingId = kingList[kingIndex];
+                    return;
+
                 }
             }
         }
