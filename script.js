@@ -26,11 +26,11 @@ function Move(id){
     }
 
     if (moveSpaces.length != 0){
-        for (index in moveSpaces){
+        for (let index in moveSpaces){
             let removeSpace = document.getElementById(moveSpaces[index]);
             removeSpace.style.background = "White";
         }
-        for (spaceIndex in moveSpaces){
+        for (let spaceIndex in moveSpaces){
             if (id == moveSpaces[spaceIndex]){
 
                 let moveSpaceLoc = moveSpaces[spaceIndex].split(" ")[0];
@@ -71,7 +71,7 @@ function Move(id){
 
                 if (check == true){
 
-                    if (pieceColour == checkKingId.split(" ")[2] || (pieceColour != checkKingId.split(" ")[2] && pieceSpace.split(" ")[1] == "King")){
+                    if (pieceColour == checkKingId.split(" ")[2]){
 
                         moveSpaces[spaceIndex] = newPieceSpaceId;
                         pieceSpace = newMoveSpaceId;
@@ -205,7 +205,7 @@ function Pawn(id, locL, locN, colour){
 
         let changeList = ["Queen", "Bishop", "Knight", "Rook"];
 
-        for (changeIndex in changeList){
+        for (let changeIndex in changeList){
 
             let changeBool = confirm("Change Pawn into "+ changeList[changeIndex] + "?");
 
@@ -633,7 +633,7 @@ function KingCheckCheck(moveList, changeColour){
 
     if (checkKingId != undefined){
 
-        for (kingListIndex in kingList){
+        for (let kingListIndex in kingList){
 
             if (kingList[kingListIndex] == checkKingId){
                 
@@ -653,6 +653,24 @@ function KingCheckCheck(moveList, changeColour){
         }
     }
 
+    if (pieceSpace.split(" ")[1] == "King" && pieceSpace.split(" ")[2] == "White"){
+
+        if (kingId1.split(" ")[2] == "Black"){
+
+            kingList = [kingId2, kingId1];
+
+        }
+    }
+
+    if (pieceSpace.split(" ")[1] == "King" && pieceSpace.split(" ")[2] == "Black"){
+
+        if (kingId1.split(" ")[2] == "White"){
+
+            kingList = [kingId2, kingId1];
+
+        }
+    }
+
     checkSpaces = [];
 
     if (check == true){
@@ -663,7 +681,7 @@ function KingCheckCheck(moveList, changeColour){
     let colour;
     let opColour;
 
-    for (kingIndex in kingList){
+    for (let kingIndex in kingList){
 
         if (check == true){
 
@@ -685,7 +703,6 @@ function KingCheckCheck(moveList, changeColour){
             if (colour == "White"){
                 opColour = "Black";
             }
-
         }
 
         if (kingList[kingIndex].split(" ")[2] == "Black"){
@@ -706,7 +723,7 @@ function KingCheckCheck(moveList, changeColour){
 
         checkSpaces = [];
 
-        for (pawnIndex in pawnMoves){
+        for (let pawnIndex in pawnMoves){
 
             let checkDirection;
 
@@ -748,7 +765,7 @@ function KingCheckCheck(moveList, changeColour){
 
         checkSpaces = [];
 
-        for (rookqueenIndex in rookqueenMoves){
+        for (let rookqueenIndex in rookqueenMoves){
 
             let moveAmount = 1;
 
@@ -811,7 +828,7 @@ function KingCheckCheck(moveList, changeColour){
 
         checkSpaces = [];
 
-        for (bishopqueenIndex in bishopqueenMoves){
+        for (let bishopqueenIndex in bishopqueenMoves){
 
             let moveAmount = 1;
             let rowMove = 1;
@@ -873,8 +890,8 @@ function KingCheckCheck(moveList, changeColour){
 
         checkSpaces = [];
 
-        for (knightMovesIndex in knightMoves){
-            for (knightMovesEndIndex in knightMovesEnd){
+        for (let knightMovesIndex in knightMoves){
+            for (let knightMovesEndIndex in knightMovesEnd){
 
                 let checkN = knightMoves[knightMovesIndex];
                 let checkL = knightMovesEnd[knightMovesEndIndex];
@@ -914,7 +931,7 @@ function KingCheckCheck(moveList, changeColour){
 
         let kingMoves = [1, -1, 1, -1, 1, -1, 1, -1];
 
-        for (kingMovesIndex in kingMoves){
+        for (let kingMovesIndex in kingMoves){
 
             let moveAmount = 1;
             let rowMove = kingMoves[kingMovesIndex];
@@ -979,7 +996,7 @@ function KingCheckMate(){
 
         let kingMoveSpaces = moveSpaces;
 
-        for (moveSpaceIndex in kingMoveSpaces){
+        for (let moveSpaceIndex in kingMoveSpaces){
 
             KingCheckCheck(kingMoveSpaces[moveSpaceIndex]);
 
@@ -1004,7 +1021,7 @@ function KingCheckMate(){
                 checkColour = "Black";
             }
 
-            for (kingCheckSpaceIndex in kingCheckSpaces){
+            for (let kingCheckSpaceIndex in kingCheckSpaces){
 
                 KingCheckCheck(kingCheckSpaces[kingCheckSpaceIndex], checkColour);
 
@@ -1013,9 +1030,8 @@ function KingCheckMate(){
                     return;
                 }
     
-                kingMoveSpaces.splice(moveSpaceIndex, 1);
+                kingCheckSpaces.splice(kingCheckSpaceIndex, 1);
                 checkmate = true;
-
             }
 
             if (checkmate == true){
